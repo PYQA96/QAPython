@@ -1,68 +1,55 @@
-
-
-
-
-def Is_polindrom(name : str):
-    if name.lower() == name[::-1].lower():
-        return f"+"
+def is_palindrome(word: str):
+    if word.lower() == word[::-1].lower():
+        return "+"
     else:
-        return f"-"
+        return "-"
 
 
-word=input("Введите слово: ")
-print(Is_polindrom(word))
+input_word = input("Введите слово: ")
+print(is_palindrome(input_word))
 print("-" * 50)
 
-def Search_the_word(name : str, search_word : str):
-    name=name.lower().split()
-    if search_word in name:
+
+def search_word_in_phrase(phrase: str, search_word: str):
+    words = phrase.lower().split()
+    if search_word in words:
         print("-" * 50)
-        return f"Yes"
+        return "Yes"
     else:
         print("-" * 50)
-        return f"No"
+        return "No"
 
 
-print("-"*50)
-word=input("Введите фразу: ")
-word_serch=input("Введите слово для описка: ")
-print(Search_the_word(word,word_serch))
+print("-" * 50)
+input_phrase = input("Введите фразу: ")
+input_search_word = input("Введите слово для поиска: ")
+print(search_word_in_phrase(input_phrase, input_search_word))
 
 
-def Convert_to_strinf(word : str):
-    word=word.split()
-    if len(word)<3:
-        return f"Длиина списка {len(word)} меньше чем 3 элемента"
-    return f"Длиина списка {len(word)}"
+def check_list_length(input_string: str):
+    words = input_string.split()
+    if len(words) < 3:
+        return f"Длина списка {len(words)} меньше 3 элементов"
+    return f"Длина списка {len(words)}"
 
 
-word=input("Введите слово: ")
-print(Is_polindrom(word))
+input_string = input("Введите строку: ")
+print(check_list_length(input_string))
 print("-" * 50)
 
 
-
-def Valid_ip_adress(adres : str):
-    adres=adres.split(".")
-    adres=[ int(num) for num in adres if num.isdigit() and 0 <= int(num) <= 255 ]
-    if len(adres)<4:
-        return f"Адресс почты не валидный, такго адреса не существует"
+def validate_ip_address(address: str):
+    original_address = address
+    components = address.split(".")
+    valid_components = [num for num in components if num.isdigit() and 0 <= int(num) <= 255]
+    if original_address.replace(".", "", 3) != "".join(valid_components):
+        return "Неверный IP-адрес"
     else:
-        return f"Адресс почты  валидный, адрес  существует"
+        return "Верный IP-адрес"
 
 
-
-
-
-word="244.123.12.1"
-print(Valid_ip_adress(word))
-print("-" * 50)
-a="244.123.12.1"
-print(a.split("."))
-
-
-
-
+input_address = input("Введите IP-адрес: ")
+print(validate_ip_address(input_address))
 
 # без функций только по пройденым тема
 
@@ -73,7 +60,6 @@ if word == word[::-1]:
 else:
     print('-')
 
-
 text = input("Введіть текст: ")
 search_word = input("Введіть слово для пошуку: ")
 if search_word in text:
@@ -81,13 +67,11 @@ if search_word in text:
 else:
     print('NO')
 
-
 email = input("Введіть пошту: ")
 if '@' in email and '.' in email:
     print('YES')
 else:
     print('NO')
-
 
 text = input("Введіть текст через пробіл: ")
 text_list = text.split()
@@ -96,7 +80,7 @@ if len(text_list) >= 3:
 else:
     print(f"Кількість елементів менша за 3: {len(text_list)}")
 
-ip_address = input("Введіть IP-адресу: ")
+ip_address = input("Введіть слово: ")
 ip_parts = ip_address.split('.')
 
 is_valid = True
