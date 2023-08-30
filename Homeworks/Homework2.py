@@ -1,78 +1,87 @@
 #  я описал в процедурном стиле так как уже знаком с функциями , добавил обработку ошибок
+# Создал своё исключние
+class Isnotoperation(Exception):
+    pass
 
 
-def calculate(a: float, b: float, c: str):
-    print(f"Введенные значения {a, b} и операция {c}")
+def calculate(first: float, second: float, operand: str):
+    print(f"Введенные значения {first, second} и операция {operand}")
     operations = ["+", "-", "*", "/"]
-    if c not in operations:
-        c = input("Введите новое значение операции: ")
-        while True:
-            try:
-                a = float(input("Введите новое значение переменной a: "))
-                b = float(input("Введите новое значение переменной b: "))
-                break
-            except ValueError:
-                print("Значение должно быть числом.")
-        return calculate(a, b, c)
-    elif c == operations[0]:
-        return a + b
-    elif c == operations[1]:
-        return a - b
-    elif c == operations[2]:
-        return a * b
-    elif c == operations[3]:
-        if b != 0:
-            return a / b
+    result=None
+    if operand == operations[0]:
+        result= first + second
+    elif operand == operations[1]:
+        result= first - second
+    elif operand == operations[2]:
+        result= first * second
+    elif operand == operations[3]:
+        if second != 0:
+            result= first / second
         else:
             print("Деление на ноль невозможно.")
+    return f"Результат {result if result is not None else 'Ошибка' }"
 
-
-
+# тут можно было сделать и через два цыклв , но я решил использовать 1 и счетчик переменных number_of_opeation
+variable_names = ["первой", "второй"]
+variabels_value = []
+number_of_opeation = 0
+while len(variabels_value) < 2:
+    try:
+        value = float(input(f"Введите значение {variable_names[number_of_opeation]}  переменной: "))
+        variabels_value.append(value)
+        number_of_opeation = number_of_opeation + 1
+    except ValueError:
+        print("Значение должно быть числом.")
+operations = ["+", "-", "*", "/"]
+variabels_operation = []
 while True:
     try:
-        a = float(input("Введите новое значение переменной a: "))
-        b = float(input("Введите новое значение переменной b: "))
-        break
-    except ValueError:
-        print("Значение должно быть числом. Попробуйте снова.")
+        value = input(f"Введите значение операции {operations}: ")
+        if value in operations:
+            variabels_operation.append(value)
+            break
+        else:
+            raise Isnotoperation
+    except Isnotoperation:
+        print(f"Неверная операция. Попробуйте снова, операции должны быть только {operations} ")
+first_varibale, second_varible = variabels_value[0], variabels_value[1]
+operation = variabels_operation[0]
+result = calculate(first_varibale, second_varible, operation)
+print(result)
 
-operation = input("Введите операцию (+, -, *, /): ")
-print("Результат:", calculate(a, b, operation))
-
-
-
-
-def Transform_value(a: float,b: float,c : str):
-    regyms=["C","F"]
-    if c not in regyms:
-        c = input("Введите новое значение операции: ")
-        while True:
-            try:
-                a = float(input("Введите новое значение градусов a: "))
-                b = float(input("Введите новое значение градусов b: "))
-                break
-            except ValueError:
-                print("Значение должно быть числом.")
-        return Transform_value(a, b, c)
-    if c == regyms[0]:
-        return a + b
-    elif c == regyms[1]:
-        return (a - 32) * 5/9 + b
+def Transform_value(first: float, operand: str):
+    print(f"Введенные значения {first} и операция {operand}")
+    regyms = ["c", "f"]
+    result=None
+    if operand == regyms[0]:
+        result=first + 273.15
+    elif operand == regyms[1]:
+        result=(first * 9/5) + 32
+    return f"Результат {result}"
 
 
+variabels_value = None
 while True:
     try:
-        a = float(input("Введите новое значение переменной a: "))
-        b = float(input("Введите новое значение переменной b: "))
+        value = float(input(f"Введите значение первой  переменной: "))
+        variabels_value=value
         break
     except ValueError:
-        print("Значение должно быть числом. Попробуйте снова.")
-
-operation = input("Введите операцию (C,F): ")
-print("Результат:", calculate(a, b, operation))
-
-
-
+        print("Значение должно быть числом.")
+operations = ["c", "f"]
+variabels_operation = None
+while True:
+    try:
+        value = input(f"Введите значение операции {operations}: ").lower()
+        if value.lower() in operations:
+            variabels_operation=value
+            break
+        else:
+            raise Isnotoperation
+    except Isnotoperation:
+        print(f"Неверная операция. Попробуйте снова, операции должны быть только {operations} ")
+result=Transform_value(variabels_value,variabels_operation)
+print(result)
 
 def calculate_mix_temperature(v1, t1, v2, t2):
     volume_mix = v1 + v2
@@ -94,4 +103,3 @@ volume_mix, temperature_mix = calculate_mix_temperature(v1, t1, v2, t2)
 # Виведення результатів
 print(f"Об'єм суміші: {volume_mix} літрів")
 print(f"Температура суміші: {temperature_mix}")
-
