@@ -1,6 +1,7 @@
 str_list = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
 result1 = {}
 result2 = {}
+result3={}
 square_list = list(map(lambda x: int(x) ** 2, str_list))
 
 # 1) вариант
@@ -15,6 +16,12 @@ print(result2)
 # 3 вариант сложил 2 списка
 merge_str = {str_list[i]: square_list[i] for i in range(len(str_list))}
 print(merge_str)
+
+# 4 вариант
+for list1,list2 in zip(str_list,square_list):
+    result3[list1]=list2
+print(result3)
+
 
 
 # калькулятор
