@@ -1,7 +1,7 @@
 str_list = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
 result1 = {}
 result2 = {}
-result3={}
+result3 = {}
 square_list = list(map(lambda x: int(x) ** 2, str_list))
 
 # 1) вариант
@@ -18,13 +18,17 @@ merge_str = {str_list[i]: square_list[i] for i in range(len(str_list))}
 print(merge_str)
 
 # 4 вариант
-for list1,list2 in zip(str_list,square_list):
-    result3[list1]=list2
+for list1, list2 in zip(str_list, square_list):
+    result3[list1] = list2
 print(result3)
 
 
-
 # калькулятор
+
+class EmptyOperand(Exception):
+    pass
+
+
 class FormulaError(Exception):
     pass
 
@@ -33,21 +37,28 @@ class WrongOperatorError(Exception):
     pass
 
 
-class EmptyOperands(Exception):
+class FormulaError(Exception):
     pass
 
 
 def calculate(formula):
     try:
-        num1, operator, num2 = formula.split()
+        if len(formula) != 3:
+            raise FormulaError("Неверное количество операндов")
+
+        num1, operator, num2 = formula
+
+        if not (num1.isnumeric() and num2.isnumeric()):
+            raise FormulaError("Числа должны быть целыми")
+
         num1 = float(num1)
         num2 = float(num2)
 
         if operator not in ('*', '/'):
-            raise WrongOperatorError("Невірний оператор, будь ласка, використовуйте '*' або '/'.")
+            raise FormulaError("Неверный оператор, используйте '*' или '/'.")
 
         if operator == '/' and num2 == 0:
-            raise ZeroDivisionError("Ділення на нуль заборонено.")
+            raise FormulaError("Деление на ноль запрещено")
 
         if operator == '*':
             result = num1 * num2
@@ -56,78 +67,67 @@ def calculate(formula):
 
         return result
 
-    except ValueError:
-        raise FormulaError("Невірний формат введення. Будь ласка, введіть формулу у форматі 'число оператор число'.")
-    except FormulaError as e:
-        return str(e)
+    except Exception as e:
+        raise FormulaError(f"Ошибка ввода: {e}")
 
 
 attempts = 3
-for _ in range(attempts):
-    formula = input("Введіть формулу (наприклад, 2 * 5): ")
+for counts in range(attempts):
+    formula = input("Введите формулу (например, 2 * 5): ")
     try:
+        formula = formula.split()
         result = calculate(formula)
         print(f"Результат: {result}")
     except FormulaError as e:
-        print(f"Помилка: {e}")
-
-    retry = input("Бажаєте спробувати ще раз? (так/ні): ").lower()
-    if retry != 'так':
+        print(f"Ошибка: {e}")
+    if counts == 2:
+        print(f"Конец програмы")
+        print("_" * 50)
         break
+    retry = input("Хотите попробовать еще раз? (да/нет): ").lower()
+    if retry != 'да':
+        print(f"Конец програмы")
+        print("_" * 50)
+        break
+
+# оптимизировал все как мог , сократил код и сделал множественную обработку исключений
 count_of_input = 0
 variables_to_calculate = None
 firs_operand, operation, second_operand = None, None, None
 while count_of_input < 3:
     try:
-        count_of_input = count_of_input + 1
+        count_of_input += 1
         variables_to_calculate = input("Введите данные в формате (число,выражение,число) через пробел: ").split()
         variables_to_calculate = list(map(lambda x: int(x) if x.isnumeric() else x, variables_to_calculate))
         if len(variables_to_calculate) != 3:
-            raise FormulaError
-        if variables_to_calculate[1] not in ["/", "+", "*"]:
-            raise WrongOperatorError
-        if not isinstance(variables_to_calculate[0], int) or not isinstance(variables_to_calculate[2], int):
-            raise ValueError
-        retry = input("Бажаєте спробувати ще раз? (так/ні): ").lower()
-        if retry != 'так':
+            raise FormulaError("Формула должна состоять из 3 операндов")
+        elif variables_to_calculate[1] not in ["/", "+", "*"]:
+            raise WrongOperatorError("Недопустимый оператор для выражения , должен быть один из (/,+,-,*) ")
+        elif not isinstance(variables_to_calculate[0], int) or not isinstance(variables_to_calculate[2], int):
+            raise ValueError("Введённые данные должны простыми числами ")
+        firs_operand, operation, second_operand = variables_to_calculate
+        if operation == "+":
+            print(f"Ответ {float(firs_operand) + float(second_operand)}")
+        elif operation == "-":
+            print(f"Ответ {float(firs_operand) - float(second_operand)}")
+        elif operation == "*":
+            print(f"Ответ {float(firs_operand) * float(second_operand)}")
+        elif operation == "/":
+            if second_operand == 0:
+                raise ZeroDivisionError("Нельзя делить на 0")
+            print(f"Ответ {float(firs_operand) / float(second_operand)}")
+    except (ZeroDivisionError, FormulaError, WrongOperatorError, ValueError, Exception) as e:
+        print(f"Ошибка: {e}")
+    else:
+        if count_of_input >= 3:
+            print("Попытки кончились")
             break
-        break
-    except FormulaError as e:
-        print(e)
-        print("Формула должна состоять из 3 операндов")
-        print("-" * 50)
-    except WrongOperatorError as e:
-        print(e)
-        print("Недопустимый оператор для выражения , должен быть один из (/,+,-,*) ")
-        print("-" * 50)
-    except ValueError as e:
-        print(e)
-        print("Введённые данные должны числами без точек ")
-        print("-" * 50)
-    except Exception as e:
-        print(e)
-        print("Ошибка выполения, возможно вы ввели пустую строку")
-        print("-" * 50)
+        else:
+            retry = input("Бажаєте спробувати ще раз? (так/ні): ").lower()
+            if retry.lower() == 'ні':
+                break
     finally:
+        print("-" * 50)
         print(
             f"Вы ввели данные {'со' if count_of_input % 2 == 0 else 'с'} {count_of_input} {'раз' if count_of_input % 2 == 0 else 'раза'}, из 3 попыток")
         print("-" * 50)
-print(variables_to_calculate)
-try:
-    if len(variables_to_calculate) != 3:
-        raise EmptyOperands
-    firs_operand, operation, second_operand = variables_to_calculate
-    if operation == "+":
-        print(f"Ответ {float(firs_operand + second_operand)}")
-
-    elif operation == "-":
-        print(f"Ответ {float(firs_operand) + float(second_operand)}")
-    elif operation == "*":
-        print(f"Ответ {float(firs_operand) + float(second_operand)}")
-    elif operation == "/":
-        print(f"Ответ {float(firs_operand) + float(second_operand)}")
-except EmptyOperands:
-    print("Произошла ошибка операнды пустые")
-except ZeroDivisionError:
-    print("Нельзя делить на 0")
-print("-" * 50)
