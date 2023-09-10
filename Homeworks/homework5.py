@@ -101,7 +101,7 @@ while count_of_input < 3:
         variables_to_calculate = list(map(lambda x: int(x) if x.isnumeric() else x, variables_to_calculate))
         if len(variables_to_calculate) != 3:
             raise FormulaError("Формула должна состоять из 3 операндов")
-        elif variables_to_calculate[1] not in ["/", "+", "*"]:
+        elif variables_to_calculate[1] not in ["/", "+", "*" , "-"]:
             raise WrongOperatorError("Недопустимый оператор для выражения , должен быть один из (/,+,-,*) ")
         elif not isinstance(variables_to_calculate[0], int) or not isinstance(variables_to_calculate[2], int):
             raise ValueError("Введённые данные должны простыми числами ")
