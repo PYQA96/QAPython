@@ -124,7 +124,7 @@ while count_of_input < 3:
             break
         else:
             retry = input("Бажаєте спробувати ще раз? (так/ні): ").lower()
-            if retry.lower() == 'ні':
+            if retry.lower() != 'так':
                 break
     finally:
         print("-" * 50)
